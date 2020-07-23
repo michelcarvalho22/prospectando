@@ -1,0 +1,29 @@
+<table class="table table-bordered table-striped table-hover js-basic-example dataTable" id="tabela_status">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Intervalo de Folow (dias)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for s in status %}
+        <tr>
+            <td>{{ s.status_desc }}</td>
+            <td>{{ s.intervalo }}</td>
+            <td>
+                <button type="button" class="btn btn-xs btn-warning waves-effect edit_registro"
+                        data-toggle="tooltip" data-placement="bottom" title="Editar Registro"
+                        href="{% url 'edit_status' s.pk %}">
+                     <i class="material-icons">mode_edit</i>
+                </button>
+                <a type="button" class="btn btn-xs  bg-red waves-effect delete_registro"
+                        data-toggle="tooltip" data-placement="bottom" title="Excluir Registro"
+                        href="{% url 'delete_status' s.pk %}">
+                     <i class="material-icons">delete_forever</i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

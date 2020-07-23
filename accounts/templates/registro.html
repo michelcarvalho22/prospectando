@@ -1,0 +1,139 @@
+{% load static widget_tweaks %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Prospectando - Alcance sua meta | REGISTRO</title>
+    <!-- Favicon-->
+    <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="{% static 'assets/plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{% static 'assets/plugins/animate-css/animate.css' %}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body class="signup-page">
+    <div class="signup-box">
+        <div class="logo">
+             <center>
+                <img src="{% static 'assets/images/logo_login.png' %}" height="120" width="200">
+            </center>
+            <small>Alcançe sua meta!</small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form id="sign_up" method="POST">
+                    {% csrf_token %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert bg-red">
+                        {{ error }}
+                        </div>
+                    {% endfor %}
+                    <div class="msg">Registro de Conta</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">face</i>
+                        </span>
+                        <div class="form-line">
+                            {% render_field form.name class='form-control' placeholder='Nome' %}
+                            {% for error in form.name.errors %}
+                            <label class="error">
+                                {{ error }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            {% render_field form.username class='form-control' placeholder='Usuário'   %}
+                            {% for error in form.username.errors %}
+                            <label class="error">
+                                {{ error }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-line">
+                             {% render_field form.email class='form-control' placeholder='Email'   %}
+                            {% for error in form.email.errors %}
+                            <label class="error">
+                                {{ error }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                             {% render_field form.password1 class='form-control' placeholder='Senha'   %}
+                            {% for error in form.password1.errors %}
+                            <label class="error">
+                                {{ error }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                             {% render_field form.password2 class='form-control' placeholder='Confirmação Senha'   %}
+                            {% for error in form.password2.errors %}
+                            <label class="error">
+                                {{ error }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">CRIAR CONTA</button>
+
+                    <div class="m-t-25 m-b--5 align-center">
+                        <a href="{% url 'login' %}">Já tem cadastrado?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'assets/plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Validation Plugin Js -->
+    <script src="{% static 'assets/plugins/jquery-validation/jquery.validate.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'assets/js/admin.js' %}"></script>
+    <script src="{% static 'assets/js/pages/examples/sign-up.js' %}"></script>
+</body>
+
+</html>

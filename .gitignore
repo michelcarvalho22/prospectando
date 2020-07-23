@@ -147,10 +147,4 @@ cython_debug/
 .idea/modules.xml
 .idea/prospectando.iml
 .idea/vcs.xml
-accounts/
-cadastros/
-core/
-manage.py
-principal/
-prospectando/
-registration
+

@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static widget_tweaks humanize %}
+
+{% block title  %} Cadastro de Vendedores {% endblock %}
+
+
+{% block page_body %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                 <button type="button" class="btn bg-pink waves-effect" id="inclui_vendedor">
+                            <i class="material-icons">save</i>
+                            <span>INCLUIR VENDEDOR</span>
+                </button>
+                <!--botoes aqui -->
+            </div>
+            <div class="body">
+                <div class="table-responsive table_viewers">
+                    {% include '_table_users_viewers.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Vendedor -->
+<div class="modal fade" id="modalVendedor" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-pink">
+                <div class="row clearfix">
+                     <div class="col-md-11">
+                        <h4 class="modal-title" id="defaultModalLabel"></h4>
+                     </div>
+                     <div class="col-md-1">
+                        <button type="button" class="btn btn-xs bg-pink  btn-link" data-dismiss="modal">
+                                <i class="material-icons">close</i>
+                        </button>
+                     </div>
+                </div>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalEditVendedor" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-orange">
+                <div class="row clearfix">
+                     <div class="col-md-11">
+                        <h4 class="modal-title" id="LabelEditVendedor"></h4>
+                     </div>
+                     <div class="col-md-1">
+                        <button type="button" class="btn btn-xs bg-orange  btn-link" data-dismiss="modal">
+                                <i class="material-icons">close</i>
+                        </button>
+                     </div>
+                </div>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+
+$('.cadastros').addClass('toggled');
+$('.cadastros1').css({ display: "block" });
+$('.cadastros2').addClass('active');
+$('.vendedores').addClass('toggled');
+
+
+
+table = $('#tabela_users_viewers').DataTable({
+    "language": {
+     "lengthMenu": "Mostrando _MENU_ registros por página",
+     "search" : "Procurar: ",
+     "info" : "Exibindo de _START_ a _END_ de _TOTAL_ registros",
+     "infoEmpty": "Nenhum registro encontrado",
+     "infoFiltered": "(filtrado entre _MAX_ registros)",
+     "paginate" : {
+       "first":      "Primeiro",
+       "last":       "Último",
+       "next":       "Próximo",
+       "previous":   "Anterior"
+     },
+     responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   0
+        } ],
+        order: [ 1, 'asc' ]
+ }
+});
+
+$("#inclui_vendedor").on("click",function(e){
+    e.preventDefault();
+    $("#modalVendedor .modal-body").load("{% url 'register_viewer' %}", function(){
+      $('.modal-title').text('Inclusão de Vendedor');
+      $('#modalVendedor').modal("show");
+    });
+});
+
+
+
+
+$("#modalVendedor .modal-body").on("submit","form",function(e){
+  e.preventDefault();
+  var dados = $(this).serialize();
+  $.post("{% url 'register_viewer' %}",dados,function(result){
+    $("#modalVendedor .modal-body").html(result);
+    if(close_modal == true){
+      $('#modalVendedor').modal("hide");
+      url = '{{ dominio }}';
+      url = url + '{% url 'view_success' %}';
+      url = url + 'users_viewers_list/Cadastro realizado com sucesso';
+       window.location.href = url;
+
+    }
+    else{
+      $('#modalVendedor').modal("show");
+    }
+  });
+});
+
+
+$("#tabela_users_viewers").on("click",".edit_registro",function(e){
+    e.preventDefault();
+    $("#modalEditVendedor .modal-body").load($(this).attr('href'),function(){
+        $('#modalEditVendedor .modal-title').text('Editar Vendedor');
+        $('#modalEditVendedor').modal("show");
+    });
+});
+
+
+$("#modalEditVendedor .modal-body").on("submit","form",function(e){
+    e.preventDefault();
+    var dados = $(this).serialize();
+    $.post($(this).attr('action'),dados,function(result){
+        $("#modalEditVendedor .modal-body").html(result);
+        if(close_modal == true){
+            $('#modalEditVendedor').modal("hide");
+            url = '{{ dominio }}';
+            url = url + '{% url 'view_success' %}';
+            url = url + 'users_viewers_list/Registro alterado com sucesso!';
+            window.location.href = url;
+        }
+        else {
+            $('#modalEditVendedor').modal("show");
+        }
+    });
+});
+
+
+ {% for message in messages %}
+
+ $.notify({
+	// options
+	    message: '{{ message }}'
+       },{
+	// settings
+       	type: '{{ message.tags }}'
+
+       });
+	  {% endfor %}
+
+
+
+{% endblock %}

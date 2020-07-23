@@ -1,0 +1,41 @@
+<table class="table table-bordered table-striped table-hover js-basic-example dataTable" id="tabela_users_viewers">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Nº Telefone</th>
+            <th>Situação</th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for users in users_viewers %}
+        <tr>
+            <td>{{ users.name }}</td>
+            <td>{{ users.email }}</td>
+            <td>{% if users.tel_user%} {{ users.tel_user }} {% endif %}</td>
+            <td>
+                {% if users.is_active == True %}
+                <span class="label label bg-green">Ativo</span>
+                {% else %}
+                <span class="label bg-red">Inativo</span>
+                {% endif %}
+            </td>
+            <td>
+
+                <button type="button" class="btn btn-xs btn-warning waves-effect edit_registro"
+                        data-toggle="tooltip" data-placement="bottom" title="Editar Registro"
+                        href="{% url 'edit_viewer' users.pk %}">
+                     <i class="material-icons">mode_edit</i>
+                </button>
+                <a type="button" class="btn btn-xs  bg-deep-orange waves-effect"
+                        data-toggle="tooltip" data-placement="bottom" title="Atualizar senha de acesso"
+                        href="{% url 'reset_password' users.pk %}">
+                     <i class="material-icons">refresh</i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

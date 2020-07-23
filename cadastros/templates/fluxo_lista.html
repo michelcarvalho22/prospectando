@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static widget_tweaks humanize %}
+
+{% block title  %} Fluxos de Workflow {% endblock %}
+
+
+{% block page_body %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                 <button type="button" class="btn bg-pink waves-effect" id="inclui_fluxo">
+                            <i class="material-icons">save</i>
+                            <span>INCLUIR FLUXO</span>
+                </button>
+                <!--botoes aqui -->
+            </div>
+            <div class="body">
+                <div class="table-responsive table_fluxo">
+                    {% include '_table_fluxo.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Inclui -->
+<div class="modal fade" id="modalfluxo" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-pink">
+                <div class="row clearfix">
+                     <div class="col-md-11">
+                        <h4 class="modal-title" id="defaultModalLabel"></h4>
+                     </div>
+                     <div class="col-md-1">
+                        <button type="button" class="btn btn-xs bg-pink  btn-link" data-dismiss="modal">
+                                <i class="material-icons">close</i>
+                        </button>
+                     </div>
+                </div>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditLead" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-orange">
+                <div class="row clearfix">
+                     <div class="col-md-11">
+                        <h4 class="modal-title" id="LabelEditVendedor"></h4>
+                     </div>
+                     <div class="col-md-1">
+                        <button type="button" class="btn btn-xs bg-orange  btn-link" data-dismiss="modal">
+                                <i class="material-icons">close</i>
+                        </button>
+                     </div>
+                </div>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+
+$('.work').addClass('toggled');
+$('.work1').css({ display: "block" });
+$('.work2').addClass('active');
+$('.fluxo').addClass('toggled');
+
+
+
+table = $('#tabela_fluxo').DataTable({
+    "language": {
+     "lengthMenu": "Mostrando _MENU_ registros por página",
+     "search" : "Procurar: ",
+     "info" : "Exibindo de _START_ a _END_ de _TOTAL_ registros",
+     "infoEmpty": "Nenhum registro encontrado",
+     "infoFiltered": "(filtrado entre _MAX_ registros)",
+     "paginate" : {
+       "first":      "Primeiro",
+       "last":       "Último",
+       "next":       "Próximo",
+       "previous":   "Anterior"
+     },
+     responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   0
+        } ],
+        order: [ 1, 'asc' ]
+ }
+});
+
+$("#inclui_lead").on("click",function(e){
+    e.preventDefault();
+    $("#modalLead .modal-body").load("{% url 'cria_lead' %}", function(){
+      $('.modal-title').text('Inclusão de Lead/Prospect');
+      $('#modalLead').modal("show");
+      {% include 'js_pesquisas_cnpj_cep.html' %}
+      {% include 'js_mask_telefone.html' %}
+      $("#modalLead .modal-body").on("change","#cadastro_completo",function(e){
+            if ($(this).is(":checked")){
+                $(".dados_add").show();
+
+            }
+            else {
+                $(".dados_add").hide();
+            }
+      });
+    });
+});
+
+
+
+
+$("#modalLead .modal-body").on("submit","form",function(e){
+  e.preventDefault();
+  var dados = $(this).serialize();
+  $.post("{% url 'cria_lead' %}",dados,function(result){
+    $("#modalLead .modal-body").html(result);
+    if(close_modal == true){
+      $('#modalLead').modal("hide");
+      url = '{{ dominio }}';
+      url = url + '{% url 'view_success' %}';
+      url = url + 'leads_lista/Cadastro realizado com sucesso';
+       window.location.href = url;
+
+    }
+    else{
+      $('#modalLead').modal("show");
+      {% include 'js_mask_telefone.html' %}
+      {% include 'js_pesquisas_cnpj_cep.html' %}
+    }
+  });
+});
+
+
+$("#tabela_leads").on("click",".edit_registro",function(e){
+    e.preventDefault();
+    $("#modalEditLead .modal-body").load($(this).attr('href'),function(){
+        $('#modalEditLead .modal-title').text('Editar Lead');
+        $('#modalEditLead').modal("show");
+        {% include 'js_pesquisas_cnpj_cep.html' %}
+        {% include 'js_mask_telefone.html' %}
+        $("#modalEditLead .modal-body").on("change","#cadastro_completo",function(e){
+            if ($(this).is(":checked")){
+                $(".dados_add").show();
+            }
+            else {
+                $(".dados_add").hide();
+            }
+        });
+
+    });
+});
+
+
+$("#modalEditLead .modal-body").on("submit","form",function(e){
+    e.preventDefault();
+    var dados = $(this).serialize();
+    $.post($(this).attr('action'),dados,function(result){
+        $("#modalEditLead .modal-body").html(result);
+        if(close_modal == true){
+            $('#modalEditLead').modal("hide");
+            url = '{{ dominio }}';
+            url = url + '{% url 'view_success' %}';
+            url = url + 'leads_lista/Registro alterado com sucesso!';
+            window.location.href = url;
+        }
+        else {
+            $('#modalEditLead').modal("show");
+            {% include 'js_pesquisas_cnpj_cep.html' %}
+            {% include 'js_mask_telefone.html' %}
+        }
+    });
+});
+
+
+$("#tabela_leads").on("click", ".delete_registro",function(e){
+    e.preventDefault();
+    var linkURL = $(this).attr("href");
+    swal({
+        title: "Tem certeza?",
+        text: "Ao aceitar este registro será excluido!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Sim, Excluir!",
+        cancelButtonText: "Não, Cancelar!",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    },
+    function(isConfirm){
+        if (isConfirm) {
+
+            swal("Excluido!", "Registro excluido com sucesso!", "success");
+            window.location.href = linkURL;
+        }
+        else {
+
+            swal("Cancelado", "Exclusão cancelada", "error");
+        }
+	});
+
+});
+
+
+
+
+ {% for message in messages %}
+
+ $.notify({
+	// options
+	    message: '{{ message }}'
+       },{
+	// settings
+       	type: '{{ message.tags }}'
+
+       });
+	  {% endfor %}
+
+
+
+{% endblock %}

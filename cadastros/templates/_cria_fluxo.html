@@ -1,0 +1,45 @@
+{% load static widget_tweaks %}
+{% if success %}
+<script>
+	   close_modal=true;
+</script>
+{% endif %}
+<form action="" class="create_fluxo" method="post" onsubmit="return false;">
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}
+       <div class="alert bg-red">
+           {{ error }}
+       </div>
+    {% endfor %}
+    <div class="row clearfix">
+        <div class="col-md-10 ">
+            <label for="{{ form.status_desc.id }}">Descrição</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.status_desc class='form-control' placeholder='Descrição do Status' %}
+                </div>
+                {% for error in form.status_desc.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class=" row clearfix">
+        <div class="col-md-10">
+            <label for="{{ form.intervalo.id }}">Intervalo (Dias)</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.intervalo class='form-control' placeholder='Intervalo de dias para folow up' %}
+                </div>
+                {% for error in form.intervalo.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn bg-pink m-t-15 waves-effect">SALVAR</button>
+</form>

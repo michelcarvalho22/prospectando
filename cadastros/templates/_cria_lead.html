@@ -1,0 +1,184 @@
+{% load static widget_tweaks %}
+{% if success %}
+<script>
+	   close_modal=true;
+</script>
+{% endif %}
+<form action="" class="create_lead" method="post" onsubmit="return false;">
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}
+       <div class="alert bg-red">
+           {{ error }}
+       </div>
+    {% endfor %}
+    <div class="row clearfix">
+        <div class="col-md-8">
+            <label for="{{ form.razao.id }}">Razão Social/Nome</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.razao class='form-control' placeholder='Informe a Razão /Nome do Cliente' %}
+                </div>
+                {% for error in form.razao.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label for="{{ form.telefone.id }}">Telefone</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.telefone class='form-control telefone' placeholder='Nº telefone de contato' %}
+                </div>
+                {% for error in form.telefone.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-8">
+            <label for="{{ form.email.id }}">Email</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.email class='form-control' placeholder='Informe o endereço de email' %}
+                </div>
+                {% for error in form.email.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="t-30">
+                <div class="switch">
+                    <label>Cadastro Completo<input id="cadastro_completo" type="checkbox"><span class="lever switch-col-pink"></span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix dados_add" style="display:none;">
+        <div class="col-md-4">
+            <label for="{{ form.cnpj_cpf.id }}">CNPJ/CPF</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.cnpj_cpf class='form-control' placeholder='CNPJ/CPF' %}
+                </div>
+                {% for error in form.cnpj_cpf.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-8">
+            <label for="{{ form.fantasia.id }}">Nome Fantasia</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.fantasia class='form-control' placeholder='Nome Fantasia' %}
+                </div>
+                {% for error in form.fantasia.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="{{ form.cep.id }}">CEP</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.cep class='form-control' placeholder='Cep' %}
+                </div>
+                {% for error in form.cep.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-7">
+            <label for="{{ form.endereco.id }}">Endereço</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.endereco class='form-control' placeholder='Endereço' %}
+                </div>
+                {% for error in form.endereco.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label for="{{ form.numero.id }}">Nº</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.numero class='form-control' placeholder='Nº' %}
+                </div>
+                {% for error in form.numero.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="{{ form.complemento.id }}">Complemento</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.complemento class='form-control' placeholder='Complemento' %}
+                </div>
+                {% for error in form.complemento.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label for="{{ form.bairro.id }}">Bairro</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.bairro class='form-control' placeholder='Bairro' %}
+                </div>
+                {% for error in form.bairro.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="{{ form.bairro.id }}">Município</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.cidade class='form-control' placeholder='Cidade' %}
+                </div>
+                {% for error in form.cidade.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label for="{{ form.uf.id }}">UF</label>
+            <div class="form-group form-group-sm">
+                <div class="form-line">
+                    {% render_field form.uf class='form-control' placeholder='UF' %}
+                </div>
+                {% for error in form.uf.errors  %}
+                <label class="error">
+                   {{ error }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <button type="submit" class="btn bg-pink m-t-15 waves-effect">SALVAR</button>
+</form>

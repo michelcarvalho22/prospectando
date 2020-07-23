@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load static widget_tweaks humanize %}
+
+{% block title  %} Status de Folow Up {% endblock %}
+
+
+{% block page_body %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                 <button type="button" class="btn bg-pink waves-effect" id="inclui_status">
+                            <i class="material-icons">save</i>
+                            <span>INCLUIR STATUS</span>
+                </button>
+                <!--botoes aqui -->
+            </div>
+            <div class="body">
+                <div class="table-responsive table_lead">
+                    {% include '_table_status.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Vendedor -->
+<div class="modal fade" id="modalStatus" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-pink">
+                 <div class="col-md-12">
+                     <div class="col-md-10"></div>
+                     <div class="col-md-2">
+                       <button type="button" class="btn btn-xs bg-pink  btn-link" data-dismiss="modal">
+                            <i class="material-icons">close</i>
+                       </button>
+                     </div>
+                 </div>
+                 <h4 class="modal-title" id="defaultModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditStatus" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-orange">
+                <div class="col-md-12">
+                     <div class="col-md-10"></div>
+                     <div class="col-md-2">
+                       <button type="button" class="btn btn-xs bg-orange  btn-link" data-dismiss="modal">
+                            <i class="material-icons">close</i>
+                       </button>
+                     </div>
+                 </div>
+                <h4 class="modal-title" id="LabelEditStatus"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+
+$('.work').addClass('toggled');
+$('.work1').css({ display: "block" });
+$('.work2').addClass('active');
+$('.status_prosp').addClass('toggled');
+
+
+
+table = $('#tabela_status').DataTable({
+    "language": {
+     "lengthMenu": "Mostrando _MENU_ registros por página",
+     "search" : "Procurar: ",
+     "info" : "Exibindo de _START_ a _END_ de _TOTAL_ registros",
+     "infoEmpty": "Nenhum registro encontrado",
+     "infoFiltered": "(filtrado entre _MAX_ registros)",
+     "paginate" : {
+       "first":      "Primeiro",
+       "last":       "Último",
+       "next":       "Próximo",
+       "previous":   "Anterior"
+     },
+     responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   0
+        } ],
+        order: [ 1, 'asc' ]
+ }
+});
+
+$("#inclui_status").on("click",function(e){
+    e.preventDefault();
+    $("#modalStatus .modal-body").load("{% url 'cria_status' %}", function(){
+      $('.modal-title').text('Incluir Status Folow UP');
+      $('#modalStatus').modal("show");
+    });
+});
+
+
+
+
+$("#modalStatus .modal-body").on("submit","form",function(e){
+  e.preventDefault();
+  var dados = $(this).serialize();
+  $.post("{% url 'cria_status' %}",dados,function(result){
+    $("#modalStatus .modal-body").html(result);
+    if(close_modal == true){
+      $('#modalStatus').modal("hide");
+      url = '{{ dominio }}';
+      url = url + '{% url 'view_success' %}';
+      url = url + 'status_lista/Cadastro realizado com sucesso';
+       window.location.href = url;
+
+    }
+    else{
+      $('#modalStatus').modal("show");
+    }
+  });
+});
+
+
+$("#tabela_status").on("click",".edit_registro",function(e){
+    e.preventDefault();
+    $("#modalEditStatus .modal-body").load($(this).attr('href'),function(){
+        $('#modalEditStatus .modal-title').text('Editar Status Folow Up');
+        $('#modalEditStatus').modal("show");
+    });
+});
+
+
+$("#modalEditStatus .modal-body").on("submit","form",function(e){
+    e.preventDefault();
+    var dados = $(this).serialize();
+    $.post($(this).attr('action'),dados,function(result){
+        $("#modalEditStatus .modal-body").html(result);
+        if(close_modal == true){
+            $('#modalEditStatus').modal("hide");
+            url = '{{ dominio }}';
+            url = url + '{% url 'view_success' %}';
+            url = url + 'status_lista/Registro alterado com sucesso!';
+            window.location.href = url;
+        }
+        else {
+            $('#modalEditStatus').modal("show");
+        }
+    });
+});
+
+
+$("#tabela_status").on("click", ".delete_registro",function(e){
+    e.preventDefault();
+    var linkURL = $(this).attr("href");
+    swal({
+        title: "Tem certeza?",
+        text: "Ao aceitar este registro será excluido!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Sim, Excluir!",
+        cancelButtonText: "Não, Cancelar!",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    },
+    function(isConfirm){
+        if (isConfirm) {
+
+            swal("Excluido!", "Registro excluido com sucesso!", "success");
+            window.location.href = linkURL;
+        }
+        else {
+
+            swal("Cancelado", "Exclusão cancelada", "error");
+        }
+	});
+
+});
+
+
+
+
+ {% for message in messages %}
+
+ $.notify({
+	// options
+	    message: '{{ message }}'
+       },{
+	// settings
+       	type: '{{ message.tags }}'
+
+       });
+	  {% endfor %}
+
+
+
+{% endblock %}
