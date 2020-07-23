@@ -1,1 +1,1 @@
-web: gunicorn upperclin.wsgi --log-file=-
+web: gunicorn prospectando.wsgi --log-file=-
